@@ -3,18 +3,25 @@ use std::mem;
 /// Caller makes sure the safety
 #[macro_export]
 macro_rules! static_refs {
-	($($id:ident = $ref:expr;)+) => {
-		$(let $id = unsafe{ static_ref($ref) };)+
+	($($id:ident = $expr:expr;)+) => {
+		$(
+			let $id = $expr;
+			let $id = unsafe{ static_ref(&$id) };
+		)+
 	}
 }
 
 /// Caller makes sure the safety
 #[macro_export]
 macro_rules! static_refs_mut {
-	($($id:ident = $ref:expr;)+) => {
-		$(let $id = unsafe{ static_ref_mut($ref) };)+
+	($($id:ident = $expr:expr;)+) => {
+		$(
+			let mut $id = $expr;
+			let $id = unsafe{ static_ref_mut(&mut $id) };
+		)+
 	}
 }
+
 
 /// Safety: Caller holds
 pub unsafe fn static_ref<T>(r:&T) -> &'static T {
@@ -28,10 +35,9 @@ pub unsafe fn static_ref_mut<T>(r:&mut T) -> &'static mut T {
 
 #[test]
 fn test() {
-	let n = 3;
 	static_refs!{
-		a = &2;
-		b = &n;
+		a = 2;
+		b = 33;
 	};
 	fn need_static(_:&'static i32) {}
 
