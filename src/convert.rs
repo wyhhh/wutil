@@ -6,7 +6,7 @@ macro_rules! static_refs {
 	($($id:ident = $expr:expr;)+) => {
 		$(
 			let $id = $expr;
-			let $id = unsafe{ static_ref(&$id) };
+			let $id = unsafe{ $crate::convert::static_ref(&$id) };
 		)+
 	}
 }
@@ -17,7 +17,7 @@ macro_rules! static_refs_mut {
 	($($id:ident = $expr:expr;)+) => {
 		$(
 			let mut $id = $expr;
-			let $id = unsafe{ static_ref_mut(&mut $id) };
+			let $id = unsafe{ $crate::convert::static_ref_mut(&mut $id) };
 		)+
 	}
 }
