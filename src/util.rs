@@ -1,8 +1,8 @@
 use std::time::Duration;
 use std::time::Instant;
 
-pub fn time_test(f: impl FnOnce()) -> Duration {
+pub fn time_test<R>(f: impl FnOnce() -> R) -> (Duration,R) {
     let start = Instant::now();
-    f();
-    start.elapsed()
+    let ret = f();
+    (start.elapsed(), ret)
 }
