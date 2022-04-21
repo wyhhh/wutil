@@ -22,30 +22,54 @@ macro_rules! static_refs_mut {
 	}
 }
 
-
 /// Safety: Caller holds
-pub unsafe fn static_ref<T>(r:&T) -> &'static T {
-	mem::transmute(r)
+pub unsafe fn static_ref<T>(r: &T) -> &'static T {
+    mem::transmute(r)
 }
 
 /// Safety: Caller holds
-pub unsafe fn static_ref_mut<T>(r:&mut T) -> &'static mut T {
-	mem::transmute(r)
+pub unsafe fn static_ref_mut<T>(r: &mut T) -> &'static mut T {
+    mem::transmute(r)
 }
 
 /// Safety: Caller holds
-pub unsafe fn make_mut<T>(r:&T) -> &mut T {
-	mem::transmute(r)
+pub unsafe fn make_mut<T>(r: &T) -> &mut T {
+    mem::transmute(r)
+}
+
+pub unsafe trait StaticRef<T> {
+    fn static_ref(&self) -> &'static T;
+    fn static_ref_mut(&mut self) -> &'static mut T;
+}
+
+unsafe impl<'a, T> StaticRef<T> for &'a T {
+    fn static_ref(&self) -> &'static T {
+        unsafe { static_ref(self) }
+    }
+
+    fn static_ref_mut(&mut self) -> &'static mut T {
+        unsafe { static_ref_mut(make_mut(self)) }
+    }
+}
+
+unsafe impl<'a, T> StaticRef<T> for &'a mut T {
+    fn static_ref(&self) -> &'static T {
+        unsafe { static_ref(self) }
+    }
+
+    fn static_ref_mut(&mut self) -> &'static mut T {
+        unsafe { static_ref_mut(self) }
+    }
 }
 
 #[test]
 fn test() {
-	static_refs!{
-		a = 2;
-		b = 33;
-	};
-	fn need_static(_:&'static i32) {}
+    static_refs! {
+        a = 2;
+        b = 33;
+    };
+    fn need_static(_: &'static i32) {}
 
-	need_static(a);
-	need_static(b);
+    need_static(a);
+    need_static(b);
 }
