@@ -2,5 +2,7 @@
 #![allow(mutable_transmutes)]
 
 trace_macros!(true);
+
 pub mod convert;
 pub mod util;
+pub mod random;
