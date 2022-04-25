@@ -23,26 +23,26 @@ macro_rules! static_refs_mut {
 }
 
 /// Safety: Caller holds
-pub unsafe fn static_ref<T>(r: &T) -> &'static T {
+pub unsafe fn static_ref<T: ?Sized>(r: &T) -> &'static T {
     mem::transmute(r)
 }
 
 /// Safety: Caller holds
-pub unsafe fn static_ref_mut<T>(r: &mut T) -> &'static mut T {
+pub unsafe fn static_ref_mut<T: ?Sized>(r: &mut T) -> &'static mut T {
     mem::transmute(r)
 }
 
 /// Safety: Caller holds
-pub unsafe fn make_mut<T>(r: &T) -> &mut T {
+pub unsafe fn make_mut<T: ?Sized>(r: &T) -> &mut T {
     mem::transmute(r)
 }
 
-pub unsafe trait StaticRef<T> {
+pub unsafe trait StaticRef<T: ?Sized> {
     fn static_ref(&self) -> &'static T;
     fn static_ref_mut(&mut self) -> &'static mut T;
 }
 
-unsafe impl<'a, T> StaticRef<T> for &'a T {
+unsafe impl<'a, T: ?Sized> StaticRef<T> for &'a T {
     fn static_ref(&self) -> &'static T {
         unsafe { static_ref(self) }
     }
@@ -52,7 +52,7 @@ unsafe impl<'a, T> StaticRef<T> for &'a T {
     }
 }
 
-unsafe impl<'a, T> StaticRef<T> for &'a mut T {
+unsafe impl<'a, T: ?Sized> StaticRef<T> for &'a mut T {
     fn static_ref(&self) -> &'static T {
         unsafe { static_ref(self) }
     }
