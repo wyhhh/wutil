@@ -3,7 +3,7 @@ use std::mem;
 /// Caller makes sure the safety
 #[macro_export]
 macro_rules! static_refs {
-	($($id:ident = $expr:expr);+) => {
+	($($id:ident = $expr:expr);+$(;)?) => {
 		$(
 			let $id = $expr;
 			let $id = unsafe{ $crate::convert::static_ref(&$id) };
@@ -14,7 +14,7 @@ macro_rules! static_refs {
 /// Caller makes sure the safety
 #[macro_export]
 macro_rules! static_refs_mut {
-	($($id:ident = $expr:expr);+) => {
+	($($id:ident = $expr:expr);+$(;)?) => {
 		$(
 			let mut $id = $expr;
 			let $id = unsafe{ $crate::convert::static_ref_mut(&mut $id) };
