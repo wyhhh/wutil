@@ -11,8 +11,8 @@ pub mod rate {
     use core::fmt;
     use std::fmt::Display;
 
-    pub struct Rate<T, T2>(T, T2, u8);
-	pub struct RemainRate<T, T2>(T, T2, u8);
+    pub struct Rate<T, T2>(pub T, pub T2, pub u8);
+	pub struct RemainRate<T, T2>(pub T, pub T2, pub u8);
 
 
     pub trait RateTrait<T> {
