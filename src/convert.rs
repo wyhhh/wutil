@@ -22,6 +22,33 @@ macro_rules! static_refs_mut {
 	}
 }
 
+pub struct StaticRefArray<T>(Vec<T>, usize);
+
+impl<T: Default> StaticRefArray<T> {
+    pub fn new(len: usize) -> Self {
+        let mut vec = Vec::with_capacity(len);
+        for _ in 0..len {
+            vec.push(T::default());
+        }
+        Self(vec, 0)
+    }
+}
+
+impl<T: 'static> Iterator for StaticRefArray<T> {
+    type Item = &'static mut T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.1 == self.0.len() {
+            return None;
+        }
+
+        let ret = unsafe {self.0.get_unchecked(self.1).static_ref_mut()};
+        self.1 += 1;
+
+        Some(ret)
+    }
+}
+
 /// Safety: Caller holds
 pub unsafe fn static_ref<T: ?Sized>(r: &T) -> &'static T {
     mem::transmute(r)
