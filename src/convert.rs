@@ -39,11 +39,29 @@ impl<T> StaticRefArray<T> {
             idx: 0,
         }
     }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 pub struct StaticRefArrayIter<'a, T> {
     vec: &'a Vec<T>,
     idx: usize,
+}
+
+impl<T> StaticRefArrayIter<'_, T> {
+    pub fn len(&self) -> usize {
+        self.vec.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 impl<T: 'static> Iterator for StaticRefArrayIter<'_, T> {
