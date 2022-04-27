@@ -28,6 +28,7 @@ pub struct StaticRefArray<T>(Vec<T>);
 impl<T> StaticRefArray<T> {
     pub fn new(len: usize, constructor: impl FnMut() -> T) -> Self {
         Self(vec_push(len, constructor))
+		  format!()
     }
 
     pub fn iter(&self) -> StaticRefArrayIter<T> {

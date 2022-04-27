@@ -6,3 +6,4 @@ trace_macros!(true);
 pub mod convert;
 pub mod util;
 pub mod random;
+pub mod types;
