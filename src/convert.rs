@@ -34,7 +34,7 @@ impl<T: Default> StaticRefArray<T> {
     }
 }
 
-impl<T: 'static> Iterator for StaticRefArray<T> {
+impl<T: 'static> Iterator for &'_ mut StaticRefArray<T> {
     type Item = &'static mut T;
 
     fn next(&mut self) -> Option<Self::Item> {
