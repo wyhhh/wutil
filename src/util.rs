@@ -17,6 +17,7 @@ pub fn vec_push<T>(len: usize, mut constructor: impl FnMut() -> T) -> Vec<T> {
 
 pub mod rate {
     use core::fmt;
+    use num::Zero;
     use std::fmt::Display;
 
     pub struct Rate<T, T2>(pub T, pub T2, pub u8);
@@ -24,21 +25,6 @@ pub mod rate {
 
     pub trait RateTrait<T> {
         fn rate(self, other: T) -> f64;
-    }
-
-    pub trait IsZero {
-        fn is_zero(self) -> bool;
-    }
-
-    impl IsZero for f32 {
-        fn is_zero(self) -> bool {
-            self == 0.0
-        }
-    }
-    impl IsZero for f64 {
-        fn is_zero(self) -> bool {
-            self == 0.0
-        }
     }
 
     impl RateTrait<f32> for f32 {
@@ -61,14 +47,14 @@ pub mod rate {
 
     impl RateTrait<f64> for f64 {
         fn rate(self, other: f64) -> f64 {
-            self * other * 100.0
+            self / other * 100.0
         }
     }
 
     impl<T, T2> fmt::Debug for Rate<T, T2>
     where
         T: Copy + RateTrait<T2>,
-        T2: Copy + RateTrait<T> + IsZero,
+        T2: Copy + RateTrait<T> + Zero,
     {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             if self.1.is_zero() {
@@ -87,7 +73,7 @@ pub mod rate {
     impl<T, T2> Display for Rate<T, T2>
     where
         T: Copy + RateTrait<T2>,
-        T2: Copy + RateTrait<T> + IsZero,
+        T2: Copy + RateTrait<T> + Zero,
     {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{:?}", self)
@@ -97,7 +83,7 @@ pub mod rate {
     impl<T, T2> fmt::Debug for RemainRate<T, T2>
     where
         T: Copy + RateTrait<T2>,
-        T2: Copy + RateTrait<T> + IsZero,
+        T2: Copy + RateTrait<T> + Zero,
     {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             if self.1.is_zero() {
@@ -116,7 +102,7 @@ pub mod rate {
     impl<T, T2> Display for RemainRate<T, T2>
     where
         T: Copy + RateTrait<T2>,
-        T2: Copy + RateTrait<T> + IsZero,
+        T2: Copy + RateTrait<T> + Zero,
     {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{:?}", self)
