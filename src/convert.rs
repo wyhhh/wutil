@@ -24,11 +24,11 @@ macro_rules! static_refs_mut {
 
 pub struct StaticRefArray<T>(Vec<T>, usize);
 
-impl<T: Default> StaticRefArray<T> {
-    pub fn new(len: usize) -> Self {
+impl<T> StaticRefArray<T> {
+    pub fn new(len: usize, mut constructor: impl FnMut() -> T) -> Self {
         let mut vec = Vec::with_capacity(len);
         for _ in 0..len {
-            vec.push(T::default());
+            vec.push(constructor());
         }
         Self(vec, 0)
     }
