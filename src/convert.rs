@@ -22,7 +22,7 @@ macro_rules! static_refs_mut {
 	}
 }
 
-pub struct StaticRefArray<T>(Vec<T>, usize);
+pub struct StaticRefArray<T>(Vec<T>);
 
 impl<T> StaticRefArray<T> {
     pub fn new(len: usize, mut constructor: impl FnMut() -> T) -> Self {
@@ -30,20 +30,32 @@ impl<T> StaticRefArray<T> {
         for _ in 0..len {
             vec.push(constructor());
         }
-        Self(vec, 0)
+        Self(vec)
+    }
+
+    pub fn iter(&self) -> StaticRefArrayIter<T> {
+        StaticRefArrayIter {
+            vec: &self.0,
+            idx: 0,
+        }
     }
 }
 
-impl<T: 'static> Iterator for &'_ mut StaticRefArray<T> {
+pub struct StaticRefArrayIter<'a, T> {
+    vec: &'a Vec<T>,
+    idx: usize,
+}
+
+impl<T: 'static> Iterator for StaticRefArrayIter<'_, T> {
     type Item = &'static mut T;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.1 == self.0.len() {
+        if self.idx == self.vec.len() {
             return None;
         }
 
-        let ret = unsafe { self.0.get_unchecked(self.1).static_ref_mut() };
-        self.1 += 1;
+        let ret = unsafe { self.vec.get_unchecked(self.idx).static_ref_mut() };
+        self.idx += 1;
 
         Some(ret)
     }
