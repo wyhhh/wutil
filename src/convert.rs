@@ -1,4 +1,5 @@
 use std::mem;
+use crate::util::vec_push;
 
 /// Caller makes sure the safety
 #[macro_export]
@@ -25,12 +26,8 @@ macro_rules! static_refs_mut {
 pub struct StaticRefArray<T>(Vec<T>);
 
 impl<T> StaticRefArray<T> {
-    pub fn new(len: usize, mut constructor: impl FnMut() -> T) -> Self {
-        let mut vec = Vec::with_capacity(len);
-        for _ in 0..len {
-            vec.push(constructor());
-        }
-        Self(vec)
+    pub fn new(len: usize, constructor: impl FnMut() -> T) -> Self {
+        Self(vec_push(len, constructor))
     }
 
     pub fn iter(&self) -> StaticRefArrayIter<T> {

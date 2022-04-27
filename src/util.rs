@@ -7,13 +7,20 @@ pub fn time_test<R>(f: impl FnOnce() -> R) -> (Duration, R) {
     (start.elapsed(), ret)
 }
 
+pub fn vec_push<T>(len: usize, mut constructor: impl FnMut() -> T) -> Vec<T> {
+    let mut vec = Vec::with_capacity(len);
+    for _ in 0..len {
+        vec.push(constructor());
+    }
+    vec
+}
+
 pub mod rate {
     use core::fmt;
     use std::fmt::Display;
 
     pub struct Rate<T, T2>(pub T, pub T2, pub u8);
-	pub struct RemainRate<T, T2>(pub T, pub T2, pub u8);
-
+    pub struct RemainRate<T, T2>(pub T, pub T2, pub u8);
 
     pub trait RateTrait<T> {
         fn rate(self, other: T) -> f64;
@@ -68,7 +75,7 @@ pub mod rate {
         }
     }
 
-	impl<T, T2> fmt::Debug for RemainRate<T, T2>
+    impl<T, T2> fmt::Debug for RemainRate<T, T2>
     where
         T: Copy + RateTrait<T2>,
         T2: Copy + RateTrait<T>,
@@ -81,9 +88,9 @@ pub mod rate {
                 width = self.2 as usize
             )
         }
-    }	
+    }
 
-	impl<T, T2> Display for RemainRate<T, T2>
+    impl<T, T2> Display for RemainRate<T, T2>
     where
         T: Copy + RateTrait<T2>,
         T2: Copy + RateTrait<T>,
