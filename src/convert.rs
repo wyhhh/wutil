@@ -42,7 +42,7 @@ impl<T: 'static> Iterator for &'_ mut StaticRefArray<T> {
             return None;
         }
 
-        let ret = unsafe {self.0.get_unchecked(self.1).static_ref_mut()};
+        let ret = unsafe { self.0.get_unchecked(self.1).static_ref_mut() };
         self.1 += 1;
 
         Some(ret)
@@ -65,27 +65,27 @@ pub unsafe fn make_mut<T: ?Sized>(r: &T) -> &mut T {
 }
 
 pub unsafe trait StaticRef<T: ?Sized> {
-    fn static_ref(&self) -> &'static T;
-    fn static_ref_mut(&mut self) -> &'static mut T;
+    unsafe fn static_ref(&self) -> &'static T;
+    unsafe fn static_ref_mut(&mut self) -> &'static mut T;
 }
 
 unsafe impl<'a, T: ?Sized> StaticRef<T> for &'a T {
-    fn static_ref(&self) -> &'static T {
-        unsafe { static_ref(self) }
+    unsafe fn static_ref(&self) -> &'static T {
+        static_ref(self)
     }
 
-    fn static_ref_mut(&mut self) -> &'static mut T {
-        unsafe { static_ref_mut(make_mut(self)) }
+    unsafe fn static_ref_mut(&mut self) -> &'static mut T {
+        static_ref_mut(make_mut(self))
     }
 }
 
 unsafe impl<'a, T: ?Sized> StaticRef<T> for &'a mut T {
-    fn static_ref(&self) -> &'static T {
-        unsafe { static_ref(self) }
+    unsafe fn static_ref(&self) -> &'static T {
+        static_ref(self)
     }
 
-    fn static_ref_mut(&mut self) -> &'static mut T {
-        unsafe { static_ref_mut(self) }
+    unsafe fn static_ref_mut(&mut self) -> &'static mut T {
+        static_ref_mut(self)
     }
 }
 
