@@ -121,5 +121,8 @@ pub mod rate {
         println!("{:?}", RemainRate(0.5_f32, 1.0_f64, 2));
         println!("{:?}", RemainRate(0.34232_f64, 1.0_f64, 44));
         println!("{:?}", RemainRate(0.34232_f64, 1.0_f32, 44));
+        println!("{:?}", RemainRate(0.34232_f64, 2.0_f32, 44));
+        println!("{:?}", RemainRate(0.34232_f64, 5.0_f32, 44));
+        println!("{:?}", RemainRate(2.34232_f64, 5.0_f32, 44));
     }
 }
