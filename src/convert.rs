@@ -28,7 +28,7 @@ macro_rules! static_refs_mut {
 ///
 /// The element expression must be a const value.
 #[macro_export]
-macro_rules! init_static_array_zero {
+macro_rules! init_static_array {
     ($ele:expr, $ele_size:expr, $arr_size:expr) => {
         unsafe {
             use std::intrinsics::transmute;
