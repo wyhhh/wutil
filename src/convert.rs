@@ -23,15 +23,21 @@ macro_rules! static_refs_mut {
 	}
 }
 
+/// # Safety
+/// Make sure it is safe to fill all zeros.
+///
+/// The element expression must be a const value.
 #[macro_export]
-macro_rules! init_static_array {
-    ($ele:expr, $ele_size:expr, $arr_size:expr) => {{
-        use std::intrinsics::transmute;
-        use std::mem::size_of;
+macro_rules! init_static_array_zero {
+    ($ele:expr, $ele_size:expr, $arr_size:expr) => {
+        unsafe {
+            use std::intrinsics::transmute;
+            use std::mem::size_of;
 
-        let copiable: [u8; $ele_size] = transmute($ele);
-        transmute([copiable; $arr_size])
-    }};
+            let copiable: [u8; $ele_size] = transmute($ele);
+            transmute([copiable; $arr_size])
+        }
+    };
 }
 
 pub struct StaticRefArray<T>(Vec<T>);
