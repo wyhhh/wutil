@@ -23,6 +23,17 @@ macro_rules! static_refs_mut {
 	}
 }
 
+#[macro_export]
+macro_rules! init_static_array {
+    ($ele:expr, $ele_size:expr, $arr_size:expr) => {{
+        use std::intrinsics::transmute;
+        use std::mem::size_of;
+
+        let copiable: [u8; $ele_size] = transmute($ele);
+        transmute([copiable; $arr_size])
+    }};
+}
+
 pub struct StaticRefArray<T>(Vec<T>);
 
 impl<T> StaticRefArray<T> {
