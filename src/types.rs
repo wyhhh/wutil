@@ -3,3 +3,8 @@ use std::path::Path;
 
 pub type SStr = Cow<'static, str>;
 pub type SPath = Cow<'static, Path>;
+
+pub enum SS {
+    SStr(SStr),
+    SPath(SPath),
+}
